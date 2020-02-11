@@ -58,9 +58,15 @@
 <script src="./libs/http.js"></script>
 <script>
     $(function () {
+        //一进入页面，发送Ajax请求，获取个人信息
+        //一：使用jQuery发送Ajax请求
         $.ajax({
             type: 'get',
             url: window.BigNew.user_info,//window可以省略
+            //这里就是把token令牌带过去
+            headers: {
+                'Authorzation': localStorage.getItem('token')
+            },
             success: function (backData) {
                 console.log(backData);
                 console.log(backData.data.userPic);
@@ -71,6 +77,17 @@
 
             }
         })
+
+        //一：原生js发送Ajax请求，如何带token过去
+        // var xhr = new XMLHttpRequest();
+        // xhr.open('get', window.BigNew.user_info);
+        // //bacunfangzai localStorage中的token令牌取出来，通过请求头的方式发给后端接口
+        // xhr.setRequestHeader('Authorzation', localStorage.getItem('token'))
+        // xhr.onload = function () {
+        //     console.log(xhr.response);
+        // }
+        // xhr.send();
+
 
         //二：退出
         //退出实际上就是删除token就ok
