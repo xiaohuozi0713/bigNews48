@@ -64,10 +64,24 @@
                 console.log(backData);
                 console.log(backData.data.userPic);
                 //显示个人信息
-                $('.user_info>img').attr('src',backData.data.userPic);                
+                $('.user_info>img').attr('src', backData.data.userPic);
                 $('.user_info>span>i').text(backData.data.nickname)
-                $('.user_center_link>img').attr('src',backData.data.userPic)
-                
+                $('.user_center_link>img').attr('src', backData.data.userPic)
+
+            }
+        })
+
+        //二：退出
+        //退出实际上就是删除token就ok
+        $('.logout').on('click', function (e) {
+            //阻止a标签的默认跳转
+            e.preventDefault();
+            //询问用户是否确定退出登录？
+            if (confirm("是否确定退出登录？")) {
+                //确定退出 删除token.
+                localStorage.removeItem('token');
+                //回到登录页面.
+                window.location.href = "login.html"
             }
         })
     })

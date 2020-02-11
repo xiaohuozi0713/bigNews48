@@ -85,10 +85,12 @@
         success: function (backData) {
           console.log(backData);
           //4.如果账户密码没有问题，登录登出，跳转到首页（index.html）
+          //alert(backData.msg)
           if (backData.code == 200) {
             //alert(backData.msg);
             $('.modal-body').text(backData.msg)
-            $('#myModal').modal()
+            $('#myModal').modal()//js代码弹出bootstrap的模态框
+            //在这里应该是要 关闭模态框 的情况下才执行下面这个跳转的代码
             $('#myModal').on('hidden.bs.modal', function (e) {
               //将令牌token保存到本地存储中localstorage
               localStorage.setItem('token',backData.token)
@@ -96,6 +98,7 @@
               window.location.href = "index.html"
             })
           } else {
+            //如果账号密码有误，提示
             //alert(backData.msg)
             $('.modal-body').text(backData.msg)
             $('#myModal').modal()
