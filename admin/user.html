@@ -79,8 +79,8 @@
                 console.log(backData);
                 if (backData.code == 200) {
                     //把对应的信息填入到对应得标签钟
-                    for (key in backData.data) {
-                        $('input' + key).val(backData.data.key)
+                    for (var key in backData.data) {
+                        $('input.' + key).val(backData.data[key])
                     }
                     $('img.user_pic').attr('src',backData.data.userPic)
                 }
