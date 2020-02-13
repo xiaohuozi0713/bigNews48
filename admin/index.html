@@ -32,7 +32,7 @@
                 </a>
             </div>
             <div class="level01">
-                <a href="#">
+                <a href="./article_list.html" target="main_frame">
                     <i class="iconfont icon-icon-article"></i>
                     <span>文章管理</span>
                     <b class="iconfont icon-arrowdownl"></b>
@@ -99,8 +99,8 @@
                 'Authorzation': localStorage.getItem('token')
             },
             success: function (backData) {
-                console.log(backData);
-                console.log(backData.data.userPic);
+                //console.log(backData);
+                //console.log(backData.data.userPic);
                 //显示个人信息
                 $('.user_info>img').attr('src', backData.data.userPic);
                 $('.user_info>span>i').text(backData.data.nickname)
@@ -134,8 +134,31 @@
             }
         })
 
-        //三：
-        $('level01')
+        //三：给左侧导航栏div设置点击事件
+        $('div.level01').on('click', function () {
+            //3.1点击当前的div添加active类，其他兄弟标签移除active类
+            $(this).addClass('active').siblings('div').removeClass('active');
+
+            //3.2如果当前点击是第二个div（文章管理），那他下面的ul就应该slideToggle
+            if ($(this).index() == 1) {
+                //点击第二个菜单，显示ul标签
+                $('ul.level02').slideToggle();//隐藏时候就显示，显示时候就隐藏
+
+                //3.3给文章管理这个页签后面的小三角（移出/添加 rotate0 类）
+                $(this).find('b').toggleClass('rotate0');
+
+                //3.4在这里默认选中第一个二级菜单
+                $('ul.level02>li:eq(0)').trigger('click');
+            }
+        })
+
+        //给ul li 添加点击事件
+        $('ul.level02>li').on('click',function () {
+            //当前点击的li添加一个active类，其他兄弟移除这个active类。
+            $(this).addClass('active').siblings('li').removeClass('active');
+        })
+
+
 
 
     })
