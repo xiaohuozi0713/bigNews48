@@ -14,6 +14,19 @@
     <script src="./libs/bootstrap/js/bootstrap.min.js"></script>
     <!-- 引入模板引擎js文件 -->
     <script src="./libs/template-web.js"></script>
+    <!-- 准备一个模板 -->
+    <script id="common_title" type="text/html">
+        {{each data v}}
+        <tr>
+            <td>{{v.name}}</td>
+            <td>{{v.slug}}</td>
+            <td class="text-center">
+                <a href="javascript:void(0)" data-id = {{v.id}} data-toggle="modal" class=" btn btn-info btn-xs">编辑</a>
+                <a href="javascript:void(0)" data-id = {{v.id}} class="btn btn-danger btn-xs">删除</a>
+            </td>
+        </tr>
+        {{/each}}
+    </script>
 </head>
 
 <body>
@@ -51,5 +64,26 @@
             </table>
         </div>
     </div>
+</body>
+<script src="./libs/http.js"></script>
+<script>
+    $(function () {
+
+        //一：一进入页面发送Ajax请求，获取所有文章类别
+        $.ajax({
+            type: 'get',
+            url: BigNew.category_list,
+            success: function (backData) {
+                console.log(backData);
+                if (backData.code == 200) {
+                    //通过模板引擎渲染到页面
+                    var resHtml = template('common_title', backData)
+                    $('tbody').html(resHtml);
+                }
+            }
+        })
+
+    })
+</script>
 
 </html>
