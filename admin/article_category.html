@@ -176,7 +176,9 @@
                 var categoryName = $('#recipient-name').val().trim();
                 var categorySlug = $('#message-text').val().trim();
                 //2.jQuery有一个serialize（）方法，可以把form表单中带有name属性的标签的值全部获取到
-                // var data1 = $('#myModal form').serialize();
+                var data = $('#myModal form').serialize();
+                console.log(data);
+                
                 
                 
 
@@ -184,13 +186,13 @@
                 $.ajax({
                     type: 'post',
                     url: BigNew.category_edit,
-                    data: {
-                        id: hideId,
-                        name: categoryName,
-                        slug: categorySlug
-                    },
+                    // data: {
+                    //     id: hideId,
+                    //     name: categoryName,
+                    //     slug: categorySlug
+                    // },
                     //传参使用jQuery的serialize（）方法帮我们获取到的值
-                    // data: data1,
+                    data: data,
                     success: function (backData) {
                         console.log(backData);
                         if (backData.code == 200) {
