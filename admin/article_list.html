@@ -73,5 +73,65 @@
         </div>
     </div>
 </body>
+<script src="./libs/http.js"></script>
+<!-- 文章类别模板 -->
+<script id="category_temp" type="text/html">
+<option value="">所有分类</option>
+{{each data v}}
+<option value="{{v.id}}">{{v.name}}</option>
+{{/each}}
+</script>
+
+<!-- 文章搜索模板 -->
+<script id="article_temp" type="text/html">
+{{each data.data v}}
+<tr>
+    <td>{{v.title}}</td>
+    <td>{{v.author}}</td>
+    <td>{{v.category}}</td>
+    <td class="text-center">{{v.date}}</td>
+    <td class="text-center">{{v.state}}</td>
+    <td class="text-center">
+        <a href="article_edit.html" class="btn btn-default btn-xs">编辑</a>
+        <a href="javascript:void(0);" data-id="{{v.id}}" class="btn btn-danger btn-xs delete">删除</a>
+    </td>
+</tr>
+{{/each}}
+</script>
+<script>
+    $(function () {
+        //一：发送Ajax请求，获取所有文章类别
+        $.ajax({
+            type: 'get',
+            url: BigNew.category_list,
+            success: function (backData) {
+                //console.log(backData);
+                //获取成功，引用模板引擎渲染到页面
+                if (backData.code == 200) {
+                    var resHtml = template('category_temp', backData);
+                    $('#selCategory').html(resHtml);
+                }
+            }
+        })
+
+        //二：一进到页面，发送Ajax请求，搜索所有文章信息
+        $.ajax({
+            type: 'get',
+            url: BigNew.article_query,
+            data: {
+                type: $('#selCategory').val(),
+                state: $('#selStatus').val(),
+                page: 1,
+                perpage: 6
+            },
+            success: function (backData) {
+                //console.log(backData);
+                //获取成功，引用模板引擎渲染到页面
+                var resHtml = template('article_temp', backData)
+                $('tbody').html(resHtml);
+            }
+        })
+    })
+</script>
 
 </html>
