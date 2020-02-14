@@ -22,7 +22,7 @@
             <td>{{v.slug}}</td>
             <td class="text-center">
                 <a href="javascript:void(0)" data-id = {{v.id}} data-toggle="modal" data-target="#myModal" class=" btn btn-info btn-xs">编辑</a>
-                <a href="javascript:void(0)" data-id = {{v.id}} class="btn btn-danger btn-xs">删除</a>
+                <a href="javascript:void(0)" data-id = {{v.id}} class="btn btn-danger btn-xs btn-delete">删除</a>
             </td>
         </tr>
         {{/each}}
@@ -49,7 +49,7 @@
                         <td>funny</td>
                         <td class="text-center">
                             <a href="javascript:void(0)" data-toggle="modal" class=" btn btn-info btn-xs">编辑</a>
-                            <a href="javascript:void(0)" class="btn btn-danger btn-xs btn-delete">删除</a>
+                            <a href="javascript:void(0)" class="btn btn-danger btn-xs">删除</a>
                         </td>
                     </tr>
                 </tbody>
@@ -132,7 +132,7 @@
                 $('#recipient-name').val($(e.relatedTarget).parent().prev().prev().text().trim())
                 $('#message-text').val($(e.relatedTarget).parent().prev().text().trim())
                 //console.log($(e.relatedTarget).attr('data-id'));
-                
+
 
             }
 
@@ -157,7 +157,7 @@
                         slug: categoreSlug
                     },
                     success: function (backData) {
-                        console.log(backData);
+                        //console.log(backData);
                         if (backData.code == 201) {
                             //新增成功，就应该隐藏模态框，以及重新加载数据
                             //隐藏模态框
@@ -175,31 +175,41 @@
         })
 
         //四：编辑第二部：
-       
+
 
 
 
 
         //五：给删除按钮设置点击事件  委托注册事件
-        $('tbody').on('click','.btn-delete',function(){
-            //1.获取要删除的这一行的文章类别id
-            var categoryId = $(this).attr('data-id');
-            
-            //2.发送Ajax请求完成删除
-            $.ajax({
-                type: 'post',
-                url: BigNew.category_delete,
-                data: {
-                    id:categoryId
-                },
-                success: function(backData){
-                    console.log(backData);
-                    alert('1')
-                    
-                }
-            })
+        $('tbody').on('click', '.btn-delete', function () {
+            if (confirm("是否确定删除？")) {
+                //1.获取要删除的这一行的文章类别id
+                var categoryId = $(this).attr('data-id');
+
+                //2.发送Ajax请求完成删除
+                $.ajax({
+                    type: 'post',
+                    url: BigNew.category_delete,
+                    data: {
+                        id: categoryId
+                    },
+                    success: function (backData) {
+                        console.log(backData);
+                        if (backData.code == 204) {
+                            //删除成功后
+                            //第一种方法：重新加载数据
+                            addArticle();
+                            // 第二种方法：直接把这一行删除
+                            // $('.btn-delete').parent().parent().remove();
+                            
+                        }
+
+                    }
+                })
+
+            }
         })
-        
+
 
 
 
