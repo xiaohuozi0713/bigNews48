@@ -21,7 +21,7 @@
             <td>{{v.name}}</td>
             <td>{{v.slug}}</td>
             <td class="text-center">
-                <a href="javascript:void(0)" data-id = {{v.id}} data-toggle="modal" data-target="#myModal" class=" btn btn-info btn-xs">编辑</a>
+                <a href="javascript:void(0)" data-id = {{v.id}}  data-toggle="modal" data-target="#myModal" class=" btn btn-info btn-xs">编辑</a>
                 <a href="javascript:void(0)" data-id = {{v.id}} class="btn btn-danger btn-xs btn-delete">删除</a>
             </td>
         </tr>
@@ -65,6 +65,7 @@
         </div>
     </div>
     <!-- 模态框 弹出框 -->
+    <input type="hidden" id="hideId" name="id">
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -77,16 +78,16 @@
                     <form>
                         <div class="form-group">
                             <label for="recipient-name" class="control-label">文章分类名称:</label>
-                            <input type="text" class="form-control" id="recipient-name">
+                            <input type="text" class="form-control" name="name" id="recipient-name">
                         </div>
                         <div class="form-group">
                             <label for="message-text" class="control-label">文章分类别名:</label>
-                            <input type="text" class="form-control" id="message-text">
+                            <input type="text" class="form-control" name="slug" id="message-text">
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-default btnCancel" data-dismiss="modal">取消</button>
                     <button type="button" id="btnAddOrEdit" class="btn btn-primary">新增</button>
                 </div>
             </div>
@@ -118,7 +119,7 @@
 
         //二：判断是 新增按钮 / 编辑按钮
         $('#myModal').on('show.bs.modal', function (e) {
-            //console.log(e.relatedTarget);
+            //console.log(e.relatedTarget);//dom对象
             if (e.relatedTarget == $('#xinzengfenlei')[0]) {
                 //如果是新增按钮 设置文本
                 $('#myModalLabel').text('新增类别');
@@ -131,13 +132,11 @@
                 //编辑第一步：把需要编辑的当前这一行的文章类别的名字和别名显示在模态框上
                 $('#recipient-name').val($(e.relatedTarget).parent().prev().prev().text().trim())
                 $('#message-text').val($(e.relatedTarget).parent().prev().text().trim())
-                //console.log($(e.relatedTarget).attr('data-id'));
-
+                $('#hideId').val($(e.relatedTarget).attr('data-id'));
 
             }
 
         })
-
 
         //三：给模态框中的 新增/编辑 按钮设置点击事件
         $('#btnAddOrEdit').on('click', function () {
@@ -171,17 +170,52 @@
                     }
                 })
 
+            } else {
+                //编辑第二部：
+                var hideId = $('#hideId').val().trim();
+                var categoryName = $('#recipient-name').val().trim();
+                var categorySlug = $('#message-text').val().trim();
+                //2.jQuery有一个serialize（）方法，可以把form表单中带有name属性的标签的值全部获取到
+                // var data1 = $('#myModal form').serialize();
+                
+                
+
+                //发送Ajax请求，完成编辑
+                $.ajax({
+                    type: 'post',
+                    url: BigNew.category_edit,
+                    data: {
+                        id: hideId,
+                        name: categoryName,
+                        slug: categorySlug
+                    },
+                    //传参使用jQuery的serialize（）方法帮我们获取到的值
+                    // data: data1,
+                    success: function (backData) {
+                        console.log(backData);
+                        if (backData.code == 200) {
+                            //修改成功后 隐藏模态框
+                            $('#myModal').modal('hide');
+                            //调用上面封装方法，重新加载数据
+                            addArticle();
+                        }
+                    }
+                })
+
+
             }
         })
 
-        //四：编辑第二部：
-
-
-
+        //四：给模态框中的取消按钮设置一个点击事件
+        $('.btnCancel').on('click', function () {
+            //把模态框的form表单清空
+            $('#myModal form')[0].reset();
+        })
 
 
         //五：给删除按钮设置点击事件  委托注册事件
         $('tbody').on('click', '.btn-delete', function () {
+            var that = $(this);
             if (confirm("是否确定删除？")) {
                 //1.获取要删除的这一行的文章类别id
                 var categoryId = $(this).attr('data-id');
@@ -198,10 +232,10 @@
                         if (backData.code == 204) {
                             //删除成功后
                             //第一种方法：重新加载数据
-                            addArticle();
+                            //addArticle();
                             // 第二种方法：直接把这一行删除
-                            // $('.btn-delete').parent().parent().remove();
-                            
+                            that.parent().parent().remove();
+
                         }
 
                     }
