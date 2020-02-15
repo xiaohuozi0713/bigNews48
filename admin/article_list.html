@@ -143,16 +143,16 @@
                         $('#pagination').next().hide();
 
                         callBack(backData);//所以把backData作为实参传过去
-                    } else if (backData.data.totalPage == myPage - 1 && backData.data.data.length == 0) {
+                    } else if (backData.data.data.length == 0 && myPage == 1) {
+                        //没有数据
+                        $('#pagination').hide();
+                        $('#pagination').next().show();
+                    }else if (backData.data.totalPage == myPage - 1 && backData.data.data.length == 0) {
 
                         myPage -= 1;
                         $('#pagination').twbsPagination('changeTotalPages', backData.data.totalPage, myPage)
 
-                    } else if (backData.data.data.length == 0) {
-                        //没有数据
-                        $('#pagination').hide();
-                        $('#pagination').next().show();
-                    }
+                    } 
                 }
 
             })
