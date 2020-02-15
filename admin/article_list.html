@@ -106,6 +106,7 @@
 </script>
 <script>
     $(function () {
+        
         //一：发送Ajax请求，获取所有文章类别
         $.ajax({
             type: 'get',
@@ -122,54 +123,53 @@
 
         //二：一进到页面，发送Ajax请求，搜索所有文章信息
         //调用articleSearch()方法
-        articleSearch();
-
-        function articleSearch() {
-            $.ajax({
-                type: 'get',
-                url: BigNew.article_query,
-                data: {
-                    type: $('#selCategory').val(),
-                    state: $('#selStatus').val(),
-                    page: 1,
-                    perpage: 6
-                },
-                success: function (backData) {
-                    console.log(backData);
-                    //获取成功，引用模板引擎渲染到页面
-                    var resHtml = template('article_temp', backData)
-                    $('tbody').html(resHtml);
-                    //分页插件的方法
-                    $('#pagination').twbsPagination({
-                        totalPages: backData.data.totalPage,//总页数
-                        visiblePages: 7,//每页显示页数
-                        first: '首页',
-                        prev: '上一页',
-                        next: '下一页',
-                        last: '尾页',
-                        onPageClick: function (event, page) {
-                            //page是当前点击的页码
-                            //发送Ajax请求
-                            $.ajax({
-                                type: 'get',
-                                url: BigNew.article_query,
-                                data: {
-                                    type: $('#selCategory').val(),
-                                    state: $('#selStatus').val(),
-                                    page: page,
-                                    perpage: 6
-                                },
-                                success: function (backData) {
-                                    //获取成功，引用模板引擎渲染到页面
-                                    var resHtml = template('article_temp', backData)
-                                    $('tbody').html(resHtml);
-                                }
+        $.ajax({
+            type: 'get',
+            url: BigNew.article_query,
+            data: {
+                type: $('#selCategory').val(),
+                state: $('#selStatus').val(),
+                page: 1,
+                perpage: 6
+            },
+            success: function (backData) {
+                console.log(backData);
+                //获取成功，引用模板引擎渲染到页面
+                var resHtml = template('article_temp', backData)
+                $('tbody').html(resHtml);
+                //分页插件的方法
+                $('#pagination').twbsPagination({
+                    totalPages: backData.data.totalPage,//总页数
+                    visiblePages: 7,//每页显示页数
+                    first: '首页',
+                    prev: '上一页',
+                    next: '下一页',
+                    last: '尾页',
+                    onPageClick: function (event, page) {
+                        //page是当前点击的页码
+                        //发送Ajax请求
+                        $.ajax({
+                            type: 'get',
+                            url: BigNew.article_query,
+                            data: {
+                                type: $('#selCategory').val(),
+                                state: $('#selStatus').val(),
+                                page: page,
+                                perpage: 6
+                            },
+                            success: function (backData) {
+                                //获取成功，引用模板引擎渲染到页面
+                                var resHtml = template('article_temp', backData)
+                                $('tbody').html(resHtml);
                             }
-                    });
-                }
-            })
+                        });
+                    }
 
-        }
+                });
+
+            }
+
+        })
 
         //三： 给筛选按钮添加点击事件
         $('#btnSearch').on('click', function (e) {
@@ -189,11 +189,17 @@
                     if (backData.code == 200) {
                         var resHtml = template('article_temp', backData);
                         $('tbody').html(resHtml);
+                        //单击筛选按钮，由于更改了条件，那筛选处来的总数就会发生更改.
+                        //所有要根据新的总页数，来重新生成这分页结构.
+                        $('#pagination'.twbsPagination('changeTotalPages', backData.data.totalPage, 1))
                     }
                 }
             })
         })
+
+
     })
+
 </script>
 
 </html>
