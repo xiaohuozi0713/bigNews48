@@ -106,7 +106,7 @@
 </script>
 <script>
     $(function () {
-        
+
         //一：发送Ajax请求，获取所有文章类别
         $.ajax({
             type: 'get',
@@ -122,7 +122,6 @@
         })
 
         //二：一进到页面，发送Ajax请求，搜索所有文章信息
-        //调用articleSearch()方法
         $.ajax({
             type: 'get',
             url: BigNew.article_query,
@@ -191,7 +190,7 @@
                         $('tbody').html(resHtml);
                         //单击筛选按钮，由于更改了条件，那筛选处来的总数就会发生更改.
                         //所有要根据新的总页数，来重新生成这分页结构.
-                        $('#pagination'.twbsPagination('changeTotalPages', backData.data.totalPage, 1))
+                        $('#pagination').twbsPagination('changeTotalPages', backData.data.totalPage,1)
                     }
                 }
             })
