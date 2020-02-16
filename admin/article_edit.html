@@ -62,7 +62,7 @@
                     <div class="jeinpbox col-sm-4">
                         <input type="text" class="jeinput" name="date" id="testico" placeholder="YYYY-MM-DD">
                         <div class="icons jebtns"
-                            onclick="jeDate('#testico',{theme:{ bgcolor: '#00A680', pnColor: '#00DDAA'},trigger:false, format: 'YYYY-MM-DD'})">
+                            onclick="jeDate('#testico',{zIndex:20999,theme:{ bgcolor: '#00A680', pnColor: '#00DDAA'},trigger:false, format: 'YYYY-MM-DD'})">
                         </div>
                     </div>
                 </div>
@@ -92,6 +92,7 @@
     $(function () {
         //1.je Date日期插件
         jeDate("#testico", {
+            zIndex:20999,
             theme: { bgcolor: "#00A680", pnColor: "#00DDAA" },//主题颜色
             format: "YYYY-MM-DD",//日期格式
             isTime: false, //是否可以选时间
@@ -144,17 +145,15 @@
             }
         })
 
-        //6.发送Ajax请求，完成修改按钮功能
-        //给修改按钮添加一个点击事件
-        $('.btn-edit').on('click', function (e) {
-            //阻止a标签的默认跳转
-            e.preventDefault();
+        //封装修改信息函数
+        function editData(myState) {
+
             //创建一个formdata对象
             var form1 = document.querySelector('form');
             var fd = new FormData(form1);
             fd.append('id', articleId);
             fd.append('content', editor.txt.html());
-            fd.append('state', '已发布');
+            fd.append('state', myState);
             //发送Ajax请求
             $.ajax({
                 type: 'post',
@@ -171,6 +170,24 @@
                     }
                 }
             })
+
+        }
+
+        //6.发送Ajax请求，完成修改按钮功能
+        //给修改按钮添加一个点击事件
+        $('.btn-edit').on('click', function (e) {
+            //阻止a标签的默认跳转
+            e.preventDefault();
+            //调用函数
+            editData("已发布");
+        })
+
+        //给草稿按钮添加一个点击事件
+        $('.btn-draft').on('click', function (e) {
+            //阻止a标签的默认跳转
+            e.preventDefault();
+            //调用函数
+            editData("草稿");
 
         })
 
