@@ -210,5 +210,32 @@
     <script src="./js/jquery-1.12.4.min.js"></script>
 
 </body>
-
+<script>
+    $(function(){
+        var articleId = window.location.search.split('=')[1];//获取文章id
+        console.log(articleId); 
+        //发送Ajax请求，获取文章详细内容
+        $.ajax({
+            type: 'get',
+            url: 'http://localhost:8080/api/v1/index/article',
+            data: {
+                id: articleId
+            },
+            success:function(backData){
+                console.log(backData);
+                if(backData.code == 200) {
+                    $('.breadcrumb').children('a:eq(1)').text(backData.data.category);
+                    $('h3.article_title').text(backData.data.title);
+                    $('div.article_con').html(backData.data.content);
+                    //上一篇
+                    //$('.article_links>a').eq(0).attr('href',backData.data.prev.id);
+                    $('.article_links>a').eq(0).text(backData.data.prev.title);
+                    //下一篇
+                    //$('.article_links>a').eq(1).attr('href',backData.data.next.id);
+                    $('.article_links>a').eq(1).text(backData.data.next.title);
+                }
+            }
+        })
+    })
+</script>
 </html>

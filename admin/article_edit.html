@@ -140,7 +140,7 @@
                     $('.article_cover').attr('src', backData.data.cover);//文章封面图片
                     $('select.form-control').val(backData.data.categoryId);//文章类型
                     $('#testico').val(backData.data.date);//日期
-                    editor.txt.html(backData.data.content);//文章内容
+                    editor.txt.text(backData.data.content);//文章内容
                 }
             }
         })
@@ -152,7 +152,7 @@
             var form1 = document.querySelector('form');
             var fd = new FormData(form1);
             fd.append('id', articleId);
-            fd.append('content', editor.txt.html());
+            fd.append('content', editor.txt.text());
             fd.append('state', myState);
             //发送Ajax请求
             $.ajax({

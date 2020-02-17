@@ -137,7 +137,7 @@
             //创建一个formData对象
             var form1 = document.querySelector('form');
             var fd = new FormData(form1);
-            fd.append('content', editor.txt.html());
+            fd.append('content', editor.txt.text());
             fd.append('state', myState);
             //发送Ajax请求，发表文章
             $.ajax({
