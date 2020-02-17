@@ -294,7 +294,7 @@
                 //获取用户名 与 评论信息
                 var comment_name = $('.comment_name').val().trim();
                 var comment_input = $('.comment_input').val().trim();
-                console.log(comment_name);
+                //console.log(comment_name);
                 
                 //发送Ajax请求，发表评论
                 $.ajax({
@@ -306,8 +306,10 @@
                        articleId: articleId, 
                     },
                     success:function(backData){
-                        console.log(backData);
-                        
+                        //console.log(backData);
+                        if(backData.code == 201) {
+                            alert('评论成功，等待管理员的审核~')
+                        }
                     }
                 })
             })
